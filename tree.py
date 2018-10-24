@@ -43,61 +43,32 @@ class Node:
 
     # search routines
 
-    # recursive dfs
+    # Облегчённая имплементация обхода в глубину (SEC(R)-2018)
+    # recursive 1d-dfs: в каждой вершине запускается функция action, возвращающая статус и состояние вершины
+    # если статуc==True, процедура обхода завершается.
+    # задача: обобщить процедуру (написать свою) для n-местных проверок, построения графа зависимостей и т.д.
     def dfs(self, action=action_check_attr, **kwargs):
-        tracer = False
+        tracer = False # т
         current = self
-        #print(self)
+        
         chk, current = action(current, **kwargs)
-        fp = kwargs.get('__noprint__lin_log', None)
-        if fp:
-            try:
-                fp.write(" ".join([str(x) for x in current.S[:4]]))
-            except Exception as e:
-                print("Linear representation writing error:", e)
-        if chk:
-            return (chk, current)
-
-        if fp:
-            try:
-                fp.write(" [ ")
-            except Exception as e:
-                print("Linear representation writing error:", e)
-
-        if len(current.children) <= 0:
-            if fp:
+        # frame-pointer mode is excluded from code for more compactivity.
+        try:
+            for en, node in enumerate(current.children):
                 try:
-                    fp.write(" ] ")
+                    (chk, crnt) = node.dfs(action, **kwargs) # run this routine for each of children
                 except Exception as e:
-                    print("Linear representation writing error:", e)
-            return (chk, current)
-
-        else:
-            if '__noprint__prefix' in kwargs:
-                kwargs['__noprint__prefix'] = '| '+kwargs['__noprint__prefix']
-            ch = current.children[:]
-#            print('actual childen of ', current)#,":", ch)
-            for en, node in enumerate(ch):
-                try:
-                    (chk, crnt) = node.dfs(action, **kwargs)
-                except:
+                    print("Exception during the inner traversal in subtree from node #:", node.index, e)
                     pass
-                    #print('Exception:', node.S.num, node.parent.S.num, node.parent.parent.S.num, current.S.num)
-                    #for debug:                    print(id(node), id(node.parent), id(node.parent.parent), id(current))
 
                 if chk == True:
-                    tracer = chk
-                    return tracer, crnt
-        if fp:
-            try:
-                fp.write(" ] ")
-            except Exception as e:
-                print("Linear representation writing error:", e)
+                    return chk, crnt
+        except Exception as e:
+            print("Exception in node #", current.index, e)
 
-            return chk, crnt  # ret from recursion
+        return chk, crnt  # ret from recursion
 
-    # upward branch checking from current node to some global root
-
+    # upward branch checking from current node to some global root - проход вверх, необходимый для "сквозного" восстановления наследования от предыдущих состояний процессов
     def upbranch(self, action=action_check_attr, **kwargs):
         chk, current = False, self
         while current != None:
@@ -107,39 +78,6 @@ class Node:
             current = current.parent
         return chk, current
 
-'''
-class Tree:  # represents a tree/subtree
-    def __init__(self, root=Node()):
-        self.root = root
-
-    # recursive dfs
-    def dfs(self, root=None, action=None, **kwargs):
-        if not root:
-            root = self.root
-        current = root
-        chk, current = action(current, **kwargs)
-        if chk:
-            return (chk, current)
-
-        if len(current.children) == 0:
-            return (chk, current)
-        else:
-            for node in current.children:
-                (chk, crnt) = self.dfs(node)
-                if chk:
-                    return (chk, crnt)
-
-    # upward branch checking from current root to some global root
-
-    def upbranch(self, bottom=None, action=None, **kwargs):
-        chk, current = False, self.root
-        if bottom:  # метод умеет стартовать с некоторой выбранной вершины, не обязательно с корня (под)дерева
-            current = bottom
-        while current.parent != None:
-            chk, current = action(current, **kwargs)
-            current = current.parent
-        return
-'''
 
 def unittest():
     dummy = [1, 2, 3, 4, [], [], [], []]

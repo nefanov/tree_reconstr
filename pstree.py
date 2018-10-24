@@ -160,9 +160,9 @@ def get_pstree(use_cache=False, permanent=False, fpath='res_pstree', save_tree_f
 
     construct_tree(1, tree, indent='|- ', permanent=False, filler=True, fill_struct=root, use_cache=use_cache,
                    **kwargs)
-    s = kwargs.get('__noprint__lin_log', None)
-    if s is not None:
-        root.dfs(action_print, K='p', __noprint__prefix='|- ', mode='print', __noprint__lin_log=s)
+#    s = kwargs.get('__noprint__lin_log', None)
+#    if s is not None:
+#        root.dfs(action_print, K='p', __noprint__prefix='|- ', mode='print', __noprint__lin_log=s)
     f = fpath + '.pkl'
     if save_tree_fmt == 'pkl':
         save_serialized(f, root)
@@ -173,7 +173,6 @@ def get_pstree(use_cache=False, permanent=False, fpath='res_pstree', save_tree_f
 def save_serialized(fname, obj):
     with open(fname, 'wb') as f:
         print('Writing to file', fname)
-        print(obj.children[0])
         pickle.dump(obj, f)
 
 
