@@ -66,7 +66,7 @@ class Node:
         except Exception as e:
             print("Exception in node #", current.index, e)
 
-        return chk, crnt  # ret from recursion
+        return chk, current  # ret from recursion
 
     # upward branch checking from current node to some global root - проход вверх, необходимый для "сквозного" восстановления наследования от предыдущих состояний процессов
     def upbranch(self, action=action_check_attr, **kwargs):
@@ -77,6 +77,31 @@ class Node:
                 break
             current = current.parent
         return chk, current
+
+
+# DFS routine to make dotfile from linked Node objects;
+# usage: pass dotfile fileobj via kwargs
+def make_dot(current=Node(), **kwargs):
+    fileobj = kwargs.get('dotfile', None)
+    if not fileobj:
+        print('open a file previously!')
+        return False, current
+
+    for child in current.children:
+        s = '\t"'+str(current.S.num).replace('[]', '').replace('[', '').replace(']', '') + '" -> ' +\
+            '"'+str(child.S.num).replace('[]', '').replace('[', '').replace(']', '') + '";\n'
+        fileobj.write(s)
+
+    return False, current
+
+
+def print_dot(fname, root, head="PSTREE"):
+    fileobj = open(fname, 'w')
+    fileobj.write("digraph "+head+' {\n')
+    root.dfs(make_dot, dotfile=fileobj)
+    fileobj.write("}")
+    fileobj.close()
+    return
 
 
 def unittest():

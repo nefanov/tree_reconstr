@@ -28,7 +28,7 @@ class Inh:
         try:
             print(self.act)
         except:
-            print('No syscall recognized')
+            print('None')
 
 
 class Synth:

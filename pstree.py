@@ -166,6 +166,7 @@ def get_pstree(use_cache=False, permanent=False, fpath='res_pstree', save_tree_f
     f = fpath + '.pkl'
     if save_tree_fmt == 'pkl':
         save_serialized(f, root)
+        print_dot('dotfile.dot',root)
 
     return root
 
