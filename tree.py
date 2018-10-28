@@ -11,11 +11,12 @@ class Node:
     def __init__(self, data=(None, None, None, []), parent=None, visited=False):
         self.visited = visited
         self.parent = parent
-        self.children = []
+        self.children = [] #list of dependencies - contains nodes, because of Python's binding feature
         self.I = Inh()
         self.S = Synth()
         self.index = default_inc.inc()
         (self.I.ptr, self.I.names, self.I.act, self.S.num) = data  # attributes
+        self.deps = []  #list of dependencies - contains nodes, because of Python's binding feature
 
     def add_child(self, child):
         child.parent = self
@@ -41,6 +42,11 @@ class Node:
                     del self.children[i]
         return self.children
 
+    # deps routines
+
+    def add_dep(self, dep):
+        self.deps.append(dep)
+        return self
     # search routines
 
     # Облегчённая имплементация обхода в глубину (SEC(R)-2018)

@@ -1,6 +1,7 @@
 from enum import Enum
 import copy
 import sortedcontainers
+from ctypes import cast, py_object
 
 stack = []
 
@@ -8,6 +9,13 @@ stack = []
 # deep copy wrapper for recursive copy dynamic structures (recursive nodes, trees, etc)
 def copy_instance(obj):
     return copy.deepcopy(obj)
+
+# Следующую функцию нужно использовать очень аккуратно, приблизительно зная, какие объекты сейчас есть в памяти
+# get id(address) and cast object from its address
+# это работает только если объект существует (в области видимости вызывающего кода)
+# в противном случае поведение неопределено.
+def cast_by_id(addr):
+    return cast(addr, py_object).value
 
 
 class Incrementor:
