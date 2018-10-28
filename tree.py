@@ -96,7 +96,7 @@ class Node:
         try:
             for en, node in enumerate(current.children):
                 try:
-                    (chk, crnt) = node.dfs(action, **kwargs)  # run this routine for each of children
+                    (chk, crnt) = node.n_dfs(action, **kwargs)  # run this routine for each of children
                 except Exception as e:
                     print("Exception during the inner traversal in subtree from node #:", node.index, e)
                     pass

@@ -10,7 +10,6 @@ import glob
 import pickle
 from stuff import Common_container, SG_container
 from tree import *
-from atriact import *
 import datetime
 
 sys.setrecursionlimit(100000)
@@ -135,6 +134,7 @@ def construct_tree(node, tree, indent='  ', output_dir='./', permanent=False, fi
 
     return fill_struct
 
+
 # make pstree as data structure
 # now this is a dict of lists: 'ppid': [pids]
 def get_pstree(use_cache=False, permanent=False, fpath='res_pstree', save_tree_fmt='linear',**kwargs):
@@ -160,13 +160,11 @@ def get_pstree(use_cache=False, permanent=False, fpath='res_pstree', save_tree_f
 
     construct_tree(1, tree, indent='|- ', permanent=False, filler=True, fill_struct=root, use_cache=use_cache,
                    **kwargs)
-#    s = kwargs.get('__noprint__lin_log', None)
-#    if s is not None:
-#        root.dfs(action_print, K='p', __noprint__prefix='|- ', mode='print', __noprint__lin_log=s)
-    f = fpath + '.pkl'
+
     if save_tree_fmt == 'pkl':
+        f = fpath + '.pkl'
         save_serialized(f, root)
-        print_dot('dotfile.dot',root)
+        print_dot('dotfile.dot', root)
 
     return root
 
