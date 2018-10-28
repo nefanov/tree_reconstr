@@ -61,7 +61,7 @@ class Node:
                     print("Exception during the inner traversal in subtree from node #:", node.index, e)
                     pass
 
-                if chk == True:
+                if chk:
                     return chk, crnt
         except Exception as e:
             print("Exception in node #", current.index, e)
@@ -78,6 +78,29 @@ class Node:
             current = current.parent
         return chk, current
 
+    #обход, возвращающий список вершин, в которых выполнились некоторые налагаемые на обход условия
+    #позволяет свести проверку n-атрибутов от условного O(N^n) к O(N^2), где N-число вершин в проверяемом дереве.
+    #inprogress
+    def n_dfs(self, action=action_check_attr, **kwargs):
+        tracer = False  # т
+        current = self
+
+        chk, current = action(current, **kwargs)
+        # frame-pointer mode is excluded from code for more compactivity.
+        try:
+            for en, node in enumerate(current.children):
+                try:
+                    (chk, crnt) = node.dfs(action, **kwargs)  # run this routine for each of children
+                except Exception as e:
+                    print("Exception during the inner traversal in subtree from node #:", node.index, e)
+                    pass
+
+                if chk == True:
+                    return chk, crnt
+        except Exception as e:
+            print("Exception in node #", current.index, e)
+
+        return chk, current  # ret from recursion
 
 # DFS routine to make dotfile from linked Node objects;
 # usage: pass dotfile fileobj via kwargs
@@ -95,6 +118,7 @@ def make_dot(current=Node(), **kwargs):
             label = "[label=" + str(child.I.act)+']'
         s = '\t"'+str(current.S.num).replace('[]', '').replace('[', '').replace(']', '') + '" -> ' +\
             '"'+str(child.S.num).replace('[]', '').replace('[', '').replace(']', '') + '"'+label+';\n'
+        # and don't forget the 'labeltooltip'- it's useful graphic primitive too
         fileobj.write(s)
 
     return False, current
