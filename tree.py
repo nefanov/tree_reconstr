@@ -87,18 +87,23 @@ def make_dot(current=Node(), **kwargs):
         print('open a file previously!')
         return False, current
 
+    label=''
+    edge_labled = kwargs.get('edge_labels', False)
+
     for child in current.children:
+        if edge_labled:
+            label = "[label=" + str(child.I.act)+']'
         s = '\t"'+str(current.S.num).replace('[]', '').replace('[', '').replace(']', '') + '" -> ' +\
-            '"'+str(child.S.num).replace('[]', '').replace('[', '').replace(']', '') + '";\n'
+            '"'+str(child.S.num).replace('[]', '').replace('[', '').replace(']', '') + '"'+label+';\n'
         fileobj.write(s)
 
     return False, current
 
 
-def print_dot(fname, root, head="PSTREE"):
+def print_dot(fname, root, head="PSTREE", edge_labels=False):
     fileobj = open(fname, 'w')
     fileobj.write("digraph "+head+' {\n')
-    root.dfs(make_dot, dotfile=fileobj)
+    root.dfs(make_dot, dotfile=fileobj, edge_labels=edge_labels)
     fileobj.write("}")
     fileobj.close()
     return
